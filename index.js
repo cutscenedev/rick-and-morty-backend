@@ -19,7 +19,7 @@ async function startServer() {
 
     console.info('Server started.');
   } catch (err) {
-    console.error(`Server initialization failed: ${err.message}. Server shuting down...`);
+    console.error('Server initialization failed. Server shuting down...', err);
 
     throw err;
   }
