@@ -1,5 +1,5 @@
 function getRedisCacheKey(queryJSON) {
-  return `WebAppServer/RaMGraphQLProxyAPIHandler:${queryJSON}`
+  return `WebAppServer/RaMGraphQLProxyAPICache:${queryJSON}`
 }
 
 const RaMGraphQLProxyAPIHandler = (redisClient) => async (req, res, next) => {
@@ -8,7 +8,11 @@ const RaMGraphQLProxyAPIHandler = (redisClient) => async (req, res, next) => {
 
   const cachedResponse = await redisClient.get(redisCacheKey);
 
-  if (cachedResponse === null) {
+  if (cachedResponse) {
+    console.debug('RaM proxy api: cache found');
+
+    res.send(cachedResponse);
+  } else {
     console.debug('RaM proxy api: cache not found');
 
     try {
@@ -35,10 +39,6 @@ const RaMGraphQLProxyAPIHandler = (redisClient) => async (req, res, next) => {
 
       res.status(500).send('External API not available');
     }
-  } else {
-    console.debug('RaM proxy api: cache found');
-
-    res.send(cachedResponse);
   }
 
   next();
