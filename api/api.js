@@ -1,12 +1,15 @@
+const express = require("express");
 const cors = require("cors");
 
-const { graphQLAPIHandler } = require("./graphQL/graphQLAPI")
+const { RaMGraphQLProxyAPIHandler } = require("./RaMGraphQLProxyAPI");
 
 function initAPIs(server) {
+  server.use(express.json())
+
   server.all(
-    "/graphql",
+    "/graphql/ramproxy",
     cors({ origin: 'http://localhost:3000' }),
-    graphQLAPIHandler
+    RaMGraphQLProxyAPIHandler,
   );
 }
 
