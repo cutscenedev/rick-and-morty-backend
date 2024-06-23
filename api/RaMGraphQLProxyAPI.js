@@ -11,24 +11,30 @@ const RaMGraphQLProxyAPIHandler = (redisClient) => async (req, res, next) => {
   if (cachedResponse === null) {
     console.debug('RaM proxy api: cache not found');
 
-    const apiResponse = await fetch('https://rickandmortyapi.com/graphql', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: queryJSON,
-    }).then(r => r.json());
+    try {
+      const apiResponse = await fetch('https://rickandmortyapi.com/graphql', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: queryJSON,
+      }).then(r => r.json());
 
-    res.send(apiResponse);
+      res.send(apiResponse);
 
-    await redisClient.set(
-      redisCacheKey,
-      JSON.stringify(apiResponse),
-      {
-        EX: 10 // Short TTL for debugging
-      }
-    )
+      await redisClient.set(
+        redisCacheKey,
+        JSON.stringify(apiResponse),
+        {
+          EX: 10 // Short TTL for debugging
+        }
+      )
+    } catch(err) {
+      console.error('rickandmortyapi request failed', err)
+
+      res.status(500).send('External API not available');
+    }
   } else {
     console.debug('RaM proxy api: cache found');
 
