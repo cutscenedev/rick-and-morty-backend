@@ -3,13 +3,13 @@ const cors = require("cors");
 
 const { RaMGraphQLProxyAPIHandler } = require("./RaMGraphQLProxyAPI");
 
-function initAPIs(server) {
+function initAPIs(server, redisClient) {
   server.use(express.json())
 
   server.all(
     "/graphql/ramproxy",
     cors({ origin: 'http://localhost:3000' }),
-    RaMGraphQLProxyAPIHandler,
+    RaMGraphQLProxyAPIHandler(redisClient),
   );
 }
 

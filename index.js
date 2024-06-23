@@ -1,10 +1,28 @@
 const express = require("express");
+
 const { initAPIs } = require("./api/api");
+const { initRedis } = require("./redis/redis");
 
-const server = express();
+async function startServer() {
+  try {
+    console.info('Server starting...');
 
-initAPIs(server)
+    const server = express();
 
-server.listen(4000);
+    const redisClient = await initRedis();
+    console.info('Redis initialized.');
 
-console.log("Server started");
+    initAPIs(server, redisClient);
+    console.info('APIs initialized.');
+
+    server.listen(4000);
+
+    console.info('Server started.');
+  } catch (err) {
+    console.error(`Server initialization failed: ${err.message}. Server shuting down...`);
+
+    throw err;
+  }
+}
+
+startServer();
