@@ -1,0 +1,15 @@
+name: ram-be
+services:
+  server:
+    container_name: ram-be-server
+    build: .
+    ports:
+      - "4000:4000"
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app
+  redis:
+    container_name: ram-be-redis
+    image: "redis:7.2.5"
