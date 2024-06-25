@@ -1,7 +1,13 @@
 const { createClient } = require("redis");
+const { config } = require("../config");
 
 async function initRedis() {
-  const client = createClient();
+  const client = createClient({
+    socket: {
+      host: config.REDIS.HOST,
+      port: config.REDIS.PORT,
+    },
+  });
 
   client.on('error', err => console.error('Redis Client Error', err));
 
