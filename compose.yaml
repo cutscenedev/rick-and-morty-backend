@@ -5,11 +5,15 @@ services:
     build: .
     ports:
       - "4000:4000"
+    depends_on:
+      - redis
     develop:
       watch:
         - action: sync+restart
           path: .
           target: /app
+          ignore:
+            - node_modules/
   redis:
     container_name: ram-be-redis
     image: "redis:7.2.5"

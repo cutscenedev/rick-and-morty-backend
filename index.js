@@ -4,6 +4,9 @@ const { initAPIs } = require("./api/api");
 const { initRedis } = require("./redis/redis");
 const { config } = require("./config");
 
+process.on('SIGTERM', () => process.exit(0));
+process.on('SIGINT', () => process.exit(0));
+
 async function startServer() {
   try {
     console.info('Server starting...');
