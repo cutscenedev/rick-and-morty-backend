@@ -22,10 +22,10 @@ async function startServer() {
     server.listen(config.SERVER_PORT);
 
     console.info(`Server running at port: ${config.SERVER_PORT}.`);
-  } catch (err) {
+  } catch(err) {
     console.error('Server initialization failed. Server shuting down...', err);
 
-    throw err;
+    throw new Error('Server initialization failed', { cause: err });
   }
 }
 
